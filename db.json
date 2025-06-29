@@ -1,16 +1,52 @@
 {
   "usuarios": [
     {
-      "id": 1,
-      "username": "admin1",
-      "avatar": "https://i.pravatar.cc/150?img=1",
-      "role": "admin"
+      "id": "admin1",
+      "username": "admin",
+      "role": "admin",
+      "avatar": "https://via.placeholder.com/50"
     },
     {
-      "id": 2,
-      "username": "user1",
-      "avatar": "https://i.pravatar.cc/150?img=2",
-      "role": "user"
+      "id": "user1",
+      "username": "john_doe",
+      "role": "user",
+      "avatar": "https://via.placeholder.com/50"
     }
-  ]
+  ],
+  "products": [
+    {
+      "id": "1",
+      "title": "Vintage Watch",
+      "description": "A classic timepiece from the 1970s",
+      "image": "https://via.placeholder.com/150",
+      "basePrice": 100,
+      "currentPrice": 100,
+      "duration": 300,
+      "startTime": "2025-06-29T13:00:00Z",
+      "lastBidder": null
+    },
+    {
+      "id": "2",
+      "title": "Antique Vase",
+      "description": "A beautifully crafted porcelain vase",
+      "image": "via.placeholder.com/150",
+      "basePrice": 200,
+      "currentPrice": 200,
+      "duration": 600,
+      "startTime": "2025-06-29T14:00:00Z",
+      "lastBidder": null
+    },
+    {
+      "id": "3",
+      "title": "Classic Painting",
+      "description": "An original oil painting from a local artist",
+      "image": "https://via.placeholder.com/150",
+      "basePrice": 500,
+      "currentPrice": 500,
+      "duration": 900,
+      "startTime": "2025-06-29T12:00:00Z",
+      "lastBidder": null
+    }
+  ],
+  "bids": []
 }

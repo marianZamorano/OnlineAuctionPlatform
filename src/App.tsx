@@ -1,18 +1,25 @@
-import { BrowserRouter } from 'react-router-dom';
-import { UserProvider } from './context/UserContext';
-import AppRoutes from './routes/routes';
-import { Box } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import AppRoutes from './routes/route';
 
-function App() {
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+  },
+});
+
+const App: React.FC = () => {
   return (
-    <UserProvider>
-      <BrowserRouter>
-        <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-          <AppRoutes />
-        </Box>
-      </BrowserRouter>
-    </UserProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppRoutes />
+    </ThemeProvider>
   );
-}
+};
 
 export default App;

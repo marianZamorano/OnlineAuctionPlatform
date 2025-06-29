@@ -1,77 +1,89 @@
-import React from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
-import { TextField, Button, MenuItem, Box, Snackbar } from '@mui/material';
 import * as Yup from 'yup';
-import { useTranslation } from 'react-i18next';
+import { Button, TextField, MenuItem, Select, FormControl, InputLabel, Box, Typography, Snackbar } from '@mui/material';
+import { UserContext } from '../context/UserContext';
+import { createUser, getUsers } from '../services/userService';
 
-const validationSchema = Yup.object({
-  username: Yup.string().required('Username is required').min(3, 'Username must be at least 3 characters'),
-  role: Yup.string().required('Role is required').oneOf(['user', 'admin'], 'Invalid role'),
+const RegisterSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(3, 'Username must be at least 3 characters')
+    .required('Username is required')
+    .test('unique-username', 'Username already exists', async (value) => {
+      const users = await getUsers();
+      return !users.some((user) => user.username === value);
+    }),
+  role: Yup.string().oneOf(['user', 'admin'], 'Invalid role').required('Role is required'),
   avatar: Yup.string().url('Invalid URL').optional(),
 });
 
-interface UserFormProps {
-  onSubmit: (values: { username: string; role: 'user' | 'admin'; avatar?: string }) => void;
-  initialValues?: { username: string; role: 'user' | 'admin'; avatar?: string };
-}
-
-const UserForm: React.FC<UserFormProps> = ({ onSubmit, initialValues }) => {
-  const { t } = useTranslation();
+const Register: React.FC = () => {
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   return (
-    <Formik
-      initialValues={initialValues || { username: '', role: 'user', avatar: '' }}
-      validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        onSubmit(values);
-        setSubmitting(false);
-        resetForm();
-      }}
-    >
-      {({ errors, touched, isSubmitting }) => (
-        <Form>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Register
+      </Typography>
+      <Formik
+        initialValues={{ username: '', role: 'user', avatar: '' }}
+        validationSchema={RegisterSchema}
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            const newUser = await createUser(values);
+            setUser(newUser);
+            setOpenSnackbar(true);
+            setTimeout(() => navigate(newUser.role === 'admin' ? '/admin' : '/'), 2000);
+          } catch (error) {
+            console.error('Registration failed:', error);
+          }
+          setSubmitting(false);
+        }}
+      >
+        {({ errors, touched, isSubmitting }) => (
+          <Form>
             <Field
               as={TextField}
               name="username"
-              label={t('username')}
+              label="Username"
+              fullWidth
+              margin="normal"
               error={touched.username && !!errors.username}
               helperText={touched.username && errors.username}
-              fullWidth
             />
-            <Field
-              as={TextField}
-              name="role"
-              select
-              label={t('role')}
-              error={touched.role && !!errors.role}
-              helperText={touched.role && errors.role}
-              fullWidth
-            >
-              <MenuItem value="user">{t('user')}</MenuItem>
-              <MenuItem value="admin">{t('admin')}</MenuItem>
-            </Field>
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Role</InputLabel>
+              <Field as={Select} name="role" label="Role">
+                <MenuItem value="user">User</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+              </Field>
+            </FormControl>
             <Field
               as={TextField}
               name="avatar"
-              label={t('avatarUrl')}
+              label="Avatar URL (optional)"
+              fullWidth
+              margin="normal"
               error={touched.avatar && !!errors.avatar}
               helperText={touched.avatar && errors.avatar}
-              fullWidth
             />
-            <Button type="submit" variant="contained" disabled={isSubmitting}>
-              {t('register')}
+            <Button type="submit" variant="contained" color="primary" disabled={isSubmitting} sx={{ mt: 2 }}>
+              Register
             </Button>
-          </Box>
-          <Snackbar
-            open={!!errors.username || !!errors.role || !!errors.avatar}
-            message={errors.username || errors.role || errors.avatar || ''}
-            autoHideDuration={6000}
-          />
-        </Form>
-      )}
-    </Formik>
+          </Form>
+        )}
+      </Formik>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        message="Registration successful!"
+        onClose={() => setOpenSnackbar(false)}
+      />
+    </Box>
   );
 };
 
-export default UserForm;
+export default Register;

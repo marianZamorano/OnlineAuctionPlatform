@@ -1,7 +1,8 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
-interface User {
-  id?: number;
+export interface User {
+  id: string;
   username: string;
   role: 'user' | 'admin';
   avatar?: string;
@@ -17,7 +18,7 @@ export const UserContext = createContext<UserContextType>({
   setUser: () => {},
 });
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
+export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
   return (
