@@ -4,8 +4,9 @@ import type { ReactNode } from 'react';
 export interface User {
   id: string;
   username: string;
+  password: string;
   role: 'user' | 'admin';
-  avatar?: string;
+  avatar: string | null;
 }
 
 interface UserContextType {

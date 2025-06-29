@@ -13,3 +13,13 @@ export const getUsers = async (): Promise<User[]> => {
   const response = await jsonInstance.get('/usuarios');
   return response.data;
 };
+
+export const loginUser = async (username: string, password: string): Promise<User> => {
+  const response = await jsonInstance.get('/usuarios');
+  const users = response.data as User[];
+  const user = users.find((u) => u.username === username && u.password === password);
+  if (!user) {
+    throw new Error('Invalid username or password');
+  }
+  return user;
+};
