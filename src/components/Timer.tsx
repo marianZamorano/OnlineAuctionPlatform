@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Typography } from '@mui/material';
-import { useAuctionStore } from '../store/useAuctionStore';
 
 interface TimerProps {
   startTime: string;
   duration: number;
   productId: string;
+  onEnd: () => void;
 }
 
-export const Timer: React.FC<TimerProps> = ({ startTime, duration, productId }) => {
+export const Timer: React.FC<TimerProps> = ({ startTime, duration, productId, onEnd }) => {
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const { updateProduct, products } = useAuctionStore();
-  const product = products.find((p) => p.id === productId);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -25,21 +23,15 @@ export const Timer: React.FC<TimerProps> = ({ startTime, duration, productId }) 
     setTimeLeft(calculateTimeLeft());
 
     timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        const remaining = calculateTimeLeft();
-        if (remaining <= 0) {
-          clearInterval(timerRef.current!);
-          if (product) {
-            updateProduct({ ...product, status: 'past' });
-          }
-          return 0;
-        }
-        return remaining;
-      });
+      setTimeLeft(calculateTimeLeft());
+      if (calculateTimeLeft() <= 0) {
+        clearInterval(timerRef.current!);
+        onEnd();
+      }
     }, 1000);
 
     return () => clearInterval(timerRef.current!);
-  }, [startTime, duration, productId, product, updateProduct]);
+  }, [startTime, duration, productId, onEnd]);
 
   return (
     <Typography variant="h6">

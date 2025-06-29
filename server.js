@@ -13,12 +13,11 @@ app.get('/events', (req, res) => {
   });
 
   const sendEvent = async () => {
-    const bids = JSON.parse(await fs.readFile(path.join(__dirname, 'db.json'))).bids;
+    const db = JSON.parse(await fs.readFile(path.join(__dirname, 'db.json')));
+    const bids = db.bids;
     const lastBid = bids[bids.length - 1];
     if (lastBid) {
-      const product = JSON.parse(await fs.readFile(path.join(__dirname, 'db.json'))).products.find(
-        (p) => p.id === lastBid.productId
-      );
+      const product = db.products.find((p) => p.id === lastBid.productId);
       res.write(`data: ${JSON.stringify({ type: 'bid', bid: lastBid, product })}\n\n`);
     }
   };

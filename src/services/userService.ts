@@ -1,7 +1,7 @@
 import jsonInstance from '../api/jsonInstance';
-import { User } from '../context/UserContext';
+import type { User } from '../context/UserContext';
 
-export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
+export const registerUser = async (user: Omit<User, 'id'>): Promise<User> => {
   const response = await jsonInstance.post('/usuarios', {
     ...user,
     id: Math.random().toString(36).slice(2),

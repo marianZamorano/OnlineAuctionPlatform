@@ -48,10 +48,17 @@ export const BidForm: React.FC<BidFormProps> = ({ product }) => {
               label="Your Bid"
               type="number"
               fullWidth
+              margin="normal"
               error={touched.amount && !!errors.amount}
               helperText={touched.amount && errors.amount}
             />
-            <Button type="submit" variant="contained" color="primary" disabled={isSubmitting || !user} sx={{ mt: 1 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={isSubmitting || !user}
+              sx={{ mt: 1 }}
+            >
               Place Bid
             </Button>
           </Form>

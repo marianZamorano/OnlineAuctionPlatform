@@ -9,6 +9,7 @@ export interface Product {
   currentPrice: number;
   duration: number;
   startTime: string;
+  lastBidder: string | null;
 }
 
 export const getProducts = async (): Promise<Product[]> => {

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
 import { Typography, Box } from '@mui/material';
+import { UserContext } from '../context/UserContext';
 
 const AdminPanel: React.FC = () => {
   const { user } = useContext(UserContext);
@@ -16,7 +16,6 @@ const AdminPanel: React.FC = () => {
         Admin Panel
       </Typography>
       <Typography>Welcome, {user.username}! This is the admin panel.</Typography>
-      {/* Implementar CRUD de productos y usuarios aquí (US4 y US5) */}
     </Box>
   );
 };

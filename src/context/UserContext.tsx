@@ -1,5 +1,5 @@
-import { createContext, useState, ReactNode } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { createContext, useState } from 'react';
+import type { ReactNode } from 'react';
 
 export interface User {
   id: string;

@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Button, TextField, MenuItem, Select, FormControl, InputLabel, Box, Typography, Snackbar } from '@mui/material';
 import { UserContext } from '../context/UserContext';
-import { createUser, getUsers } from '../services/userService';
+import { registerUser, getUsers } from '../services/userService';
 
 const RegisterSchema = Yup.object().shape({
   username: Yup.string()
@@ -14,7 +14,9 @@ const RegisterSchema = Yup.object().shape({
       const users = await getUsers();
       return !users.some((user) => user.username === value);
     }),
-  role: Yup.string().oneOf(['user', 'admin'], 'Invalid role').required('Role is required'),
+  role: Yup.string()
+    .oneOf(['user', 'admin'] as const, 'Invalid role')
+    .required('Role is required'),
   avatar: Yup.string().url('Invalid URL').optional(),
 });
 
@@ -29,11 +31,11 @@ const Register: React.FC = () => {
         Register
       </Typography>
       <Formik
-        initialValues={{ username: '', role: 'user', avatar: '' }}
+        initialValues={{ username: '', role: 'user' as 'user' | 'admin', avatar: '' }}
         validationSchema={RegisterSchema}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            const newUser = await createUser(values);
+            const newUser = await registerUser(values);
             setUser(newUser);
             setOpenSnackbar(true);
             setTimeout(() => navigate(newUser.role === 'admin' ? '/admin' : '/'), 2000);

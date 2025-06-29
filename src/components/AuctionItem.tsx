@@ -6,9 +6,10 @@ import type { Product } from '../services/productService';
 interface AuctionItemProps {
   product: Product;
   status: 'active' | 'upcoming' | 'past';
+  onTimerEnd: () => void;
 }
 
-export const AuctionItem: React.FC<AuctionItemProps> = ({ product, status }) => {
+export const AuctionItem: React.FC<AuctionItemProps> = ({ product, status, onTimerEnd }) => {
   return (
     <Card sx={{ maxWidth: 345, m: 2 }}>
       <CardMedia component="img" height="140" image={product.image} alt={product.title} />
@@ -27,7 +28,7 @@ export const AuctionItem: React.FC<AuctionItemProps> = ({ product, status }) => 
         </Typography>
         {status === 'active' && (
           <Box sx={{ mt: 2 }}>
-            <Timer startTime={product.startTime} duration={product.duration} productId={product.id} />
+            <Timer startTime={product.startTime} duration={product.duration} productId={product.id} onEnd={onTimerEnd} />
             <BidForm product={product} />
           </Box>
         )}

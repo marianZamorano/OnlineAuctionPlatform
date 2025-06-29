@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
-import { getProducts, Product } from '../services/productService';
+import { getProducts } from '../services/productService';
 import { AuctionItem } from '../components/AuctionItem';
+import type { Product } from '../services/productService';
 
 const AuctionRoom: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -10,9 +11,13 @@ const AuctionRoom: React.FC = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const products = await getProducts();
-      const foundProduct = products.find((p) => p.id === productId);
-      setProduct(foundProduct || null);
+      try {
+        const products = await getProducts();
+        const foundProduct = products.find((p) => p.id === productId);
+        setProduct(foundProduct || null);
+      } catch (error) {
+        console.error('Failed to fetch product:', error);
+      }
     };
     fetchProduct();
   }, [productId]);
@@ -35,7 +40,11 @@ const AuctionRoom: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Auction: {product.title}
       </Typography>
-      <AuctionItem product={product} status={getStatus(product)} />
+      <AuctionItem
+        product={product}
+        status={getStatus(product)}
+        onTimerEnd={() => console.log(`Subasta para ${product.id} finalizada`)}
+      />
     </Box>
   );
 };

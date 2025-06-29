@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useAuctionStore } from '../store/useAuctionStore';
 import { createBid, updateProductBid } from '../services/bidService';
-import { User } from '../context/UserContext';
+import type { User } from '../context/UserContext';
 
 export const useAuction = () => {
   const { products, bids, addBid, updateProduct } = useAuctionStore();
@@ -27,7 +27,7 @@ export const useAuction = () => {
   );
 
   useEffect(() => {
-    const eventSource = new EventSource('http://localhost:3001/events');
+    const eventSource = new EventSource('http://localhost:3002/events');
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'bid') {
