@@ -1,9 +1,9 @@
 import { Component, type ReactNode } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter } from 'react-router-dom';
-import AppRoutes from './routes/route';
+import AppRoutes from './routes/routes';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
